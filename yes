@@ -1,0 +1,29 @@
+local Players = game:GetService("Players")
+
+local function makePlayerWalk(player)
+    local character = player.Character
+    if character then
+        local humanoid = character:WaitForChild("Humanoid")
+        while true do
+            humanoid:Move(Vector3.new(0, 0, -1), true)  -- Mover para frente
+            wait(0.3)  -- Espera 0.3 segundos antes de mover novamente
+            humanoid:Move(Vector3.zero, true)  -- Para de andar
+        end
+    end
+end
+
+-- Faz com que todos os jogadores andem para frente
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function()
+        makePlayerWalk(player)
+    end)
+end)
+
+for _, player in pairs(Players:GetPlayers()) do
+    if player.Character then
+        makePlayerWalk(player)
+    else
+        player.CharacterAdded:Wait()
+        makePlayerWalk(player)
+    end
+end
